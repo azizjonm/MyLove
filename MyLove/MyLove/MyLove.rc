@@ -103,69 +103,124 @@ END
 // Menu
 //
 
+IDR_FILEMANAGER MENU
+BEGIN
+    POPUP "FileManager"
+    BEGIN
+        MENUITEM "传输(&T)",                      IDM_TRANSFER
+        MENUITEM "重命名(&R)",                     32773
+        MENUITEM "删除(&D)",                      32774
+        MENUITEM "新建文件夹(&N)",                   32775
+        MENUITEM "本地打开(&O)",                    32776
+        POPUP "远程打开(&O)"
+        BEGIN
+            MENUITEM "显示运行(&S)",                    32778
+            MENUITEM "隐藏运行(&H)",                    32779
+        END
+        MENUITEM "刷新(&R)",                      IDM_REFRESH
+    END
+END
+
+IDR_LIST MENU
+BEGIN
+    POPUP "MENU"
+    BEGIN
+        MENUITEM "文件管理(&F)",                    IDM_FILEMANAGER
+        MENUITEM "屏幕控制(&C)",                    32784
+        MENUITEM "键盘记录(&K)",                    32785
+        MENUITEM "远程终端(&T)",                    32786
+        MENUITEM "系统管理(&M)",                    32787
+        MENUITEM "视频查看(&V)",                    32788
+        MENUITEM "语音监听(&W)",                    32789
+        MENUITEM "下载执行(&D)",                    32790
+        MENUITEM "免杀更新(&U)",                    32791
+        POPUP "主机管理(&S)"
+        BEGIN
+            MENUITEM "卸载(&U)",                      IDM_REMOVE
+            MENUITEM SEPARATOR
+            MENUITEM "断开(&D)",                      IDM_DISCONNECT
+            MENUITEM "注销(&L)",                      IDM_LOGOFF
+            MENUITEM "重启(&R)",                      IDM_REBOOT
+            MENUITEM "关机(&S)",                      IDM_SHUTDOWN
+        END
+        POPUP "访问网址(&V)"
+        BEGIN
+            MENUITEM "隐藏(&H)",                      IDM_OPEN_URL_HIDE
+            MENUITEM "显示(&S)",                      IDM_OPEN_URL_SHOW
+        END
+        POPUP "开启3389(&O)"
+        BEGIN
+            MENUITEM "打开端口(&O)",                    IDC_OPEN_PORT
+            MENUITEM "双开3389(&D)",                  ID_OPEN3389
+        END
+        MENUITEM "发送信息(&B)",                    32813
+        MENUITEM "清除日志(&C)",                    32814
+        MENUITEM "更改备注(&R)",                    32815
+        MENUITEM SEPARATOR
+        MENUITEM "选择全部(&A)",                    IDM_SELECT_ALL
+        MENUITEM "取消选择(&U)",                    IDM_UNSELECT_ALL
+    END
+END
+
+IDR_LOCAL_VIEW MENU
+BEGIN
+    POPUP "lView"
+    BEGIN
+        MENUITEM "大图标",                         IDM_LOCAL_BIGICON
+        MENUITEM "小图标",                         32822
+        MENUITEM "列表",                          32823
+        MENUITEM "详细信息",                        32824
+    END
+END
+
 IDR_MAINFRAME MENU
 BEGIN
     POPUP "文件(&F)"
     BEGIN
-        MENUITEM "新建(&N)\tCtrl+N",              ID_FILE_NEW
-        MENUITEM "打开(&O)...\tCtrl+O",           ID_FILE_OPEN
-        MENUITEM "关闭(&C)",                      ID_FILE_CLOSE
-        MENUITEM SEPARATOR
-        MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1, GRAYED
-        MENUITEM SEPARATOR
-        MENUITEM "退出(&X)",                      ID_APP_EXIT
+        MENUITEM "退出程序(&E)",                    32825
     END
-    POPUP "视图(&V)"
+    POPUP "选项(&O)"
     BEGIN
-        MENUITEM "工具栏(&T)",                     ID_VIEW_TOOLBAR
+        MENUITEM "创建客户(&B)",                    ID_BUILD
+    END
+    POPUP "查看(&V)"
+    BEGIN
         MENUITEM "状态栏(&S)",                     ID_VIEW_STATUS_BAR
+        MENUITEM "工具栏(&T)",                     32828, INACTIVE
     END
     POPUP "帮助(&H)"
     BEGIN
-        MENUITEM "关于 MyLove(&A)...",            ID_APP_ABOUT
+        MENUITEM "关于(&A)...",                   ID_APP_ABOUT
     END
 END
 
-IDR_MyLoveTYPE MENU
+IDR_MINIMIZE MENU
 BEGIN
-    POPUP "文件(&F)"
+    POPUP "MINIMIZE"
     BEGIN
-        MENUITEM "新建(&N)\tCtrl+N",              ID_FILE_NEW
-        MENUITEM "打开(&O)...\tCtrl+O",           ID_FILE_OPEN
-        MENUITEM "关闭(&C)",                      ID_FILE_CLOSE
-        MENUITEM "保存(&S)\tCtrl+S",              ID_FILE_SAVE
-        MENUITEM "另存为(&A)...",                  ID_FILE_SAVE_AS
-        MENUITEM SEPARATOR
-        MENUITEM "发送(&D)...",                   ID_FILE_SEND_MAIL
-        MENUITEM SEPARATOR
-        MENUITEM "最近的文件",                       ID_FILE_MRU_FILE1, GRAYED
-        MENUITEM SEPARATOR
-        MENUITEM "退出(&X)",                      ID_APP_EXIT
+        MENUITEM "隐藏",                          32829
+        MENUITEM "显示",                          32830
+        MENUITEM "退出",                          32831
     END
-    POPUP "编辑(&E)"
+END
+
+IDR_PSLIST MENU
+BEGIN
+    POPUP "PSLIST"
     BEGIN
-        MENUITEM "撤消(&U)\tCtrl+Z",              ID_EDIT_UNDO
-        MENUITEM SEPARATOR
-        MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
-        MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
-        MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM "结束(&T)",                      IDM_KILLPROCESS
+        MENUITEM "刷新(&R)",                      32833
     END
-    POPUP "视图(&V)"
+END
+
+IDR_REMOTE_VIEW MENU
+BEGIN
+    POPUP "Rview"
     BEGIN
-        MENUITEM "工具栏(&T)",                     ID_VIEW_TOOLBAR
-        MENUITEM "状态栏(&S)",                     ID_VIEW_STATUS_BAR
-    END
-    POPUP "窗口(&W)"
-    BEGIN
-        MENUITEM "新建窗口(&N)",                    ID_WINDOW_NEW
-        MENUITEM "层叠(&C)",                      ID_WINDOW_CASCADE
-        MENUITEM "平铺(&T)",                      ID_WINDOW_TILE_HORZ
-        MENUITEM "排列图标(&A)",                    ID_WINDOW_ARRANGE
-        MENUITEM "拆分(&P)",                      ID_WINDOW_SPLIT
-    END
-    POPUP "帮助(&H)"
-    BEGIN
-        MENUITEM "关于 MyLove(&A)...",            ID_APP_ABOUT
+        MENUITEM "大图标",                         32835
+        MENUITEM "小图标",                         32836
+        MENUITEM "列表",                          32837
+        MENUITEM "详细信息",                        32838
     END
 END
 
@@ -616,6 +671,28 @@ BEGIN
     AFX_IDS_SCRESTORE       "将窗口恢复到正常大小"
     AFX_IDS_SCTASKLIST      "激活任务列表"
     AFX_IDS_MDICHILD        "激活此窗口"
+END
+
+STRINGTABLE
+BEGIN
+    IDT_LOCAL_PREV          "\n返回上级目录"
+    IDT_LOCAL_COPY          "\n拷贝目录到另外的计算机"
+    IDT_LOCAL_DELETE        "\n删除文件或目录"
+    IDT_LOCAL_VIEW          "\n选择图标模式"
+END
+
+STRINGTABLE
+BEGIN
+    IDT_LOCAL_NEWFOLDER     "\n新建文件"
+    IDT_LOCAL_STOP          "\n停止当前操作"
+END
+
+STRINGTABLE
+BEGIN
+    ID_STAUTSTIP            "就绪"
+    ID_STAUTSSPEED          "发送: 0.00 kb/s 接收: 0.00 kb/s"
+    ID_STAUTSPORT           "监听端口: 1986"
+    ID_STAUTSCOUNT          "上线主机: 0"
 END
 
 #endif    // 中文(简体，中国) resources
