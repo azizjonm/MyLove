@@ -22,7 +22,9 @@
 #define DEFAULT_MAX_BLANKS      10
 #define DEFALUT_MAX_DATA_SIZE   64
 
-FARPROC()
+FARPROC icmp_creat, icmp_send, to_ip;
+
+
 
 int _tmain(int argc, _TCHAR* argv[])
 {
