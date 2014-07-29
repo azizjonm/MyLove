@@ -7,9 +7,16 @@
 
 #include "targetver.h"
 
+#include <Windows.h>
+
+#include <TlHelp32.h>
+
 #include <stdio.h>
 #include <tchar.h>
-
+#include <iostream>
+#include <string>
+#include <list>
+#include <map>
 
 
 // TODO: 在此处引用程序需要的其他头文件
