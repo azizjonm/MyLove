@@ -9,6 +9,8 @@
 
 #include <Windows.h>
 
+#include <CommCtrl.h>
+
 #include <TlHelp32.h>
 
 #include <stdio.h>
