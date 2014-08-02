@@ -1,6 +1,11 @@
 // UAC.cpp : 定义控制台应用程序的入口点。
 //
 
+// Reference:   [Creating and Using a Temporary File](http://msdn.microsoft.com/en-us/library/windows/desktop/aa363875%28v=vs.85%29.aspx)
+//              [GetTempFileName function](http://msdn.microsoft.com/en-us/library/windows/desktop/aa364991%28v=vs.85%29.aspx)
+//              [GetTempPath function](http://msdn.microsoft.com/en-us/library/windows/desktop/aa364992%28v=vs.85%29.aspx)
+//              [FindResource function](http://msdn.microsoft.com/en-us/library/windows/desktop/ms648042%28v=vs.85%29.aspx)
+
 #include "stdafx.h"
 
 #include <Windows.h>
@@ -56,7 +61,7 @@ bool GetProcessList(HWND hWnd, std::map<DWORD, std::wstring> &mapProcess)
 
 bool OpenProcessToInject(HWND hWnd, HANDLE *pOutProcHandle, DWORD dwPid, const wchar_t *szProcName)
 {
-    *pOutProcHandle = NULL;
+    *pOutProcHandle = INVALID_HANDLE_VALUE;
 
     if(szProcName == NULL){
         printf("Empty process name!\n");
