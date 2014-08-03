@@ -6,6 +6,7 @@
 #pragma once
 
 #include "targetver.h"
+#include <afx.h>
 
 #include <Windows.h>
 #include <atlstr.h>

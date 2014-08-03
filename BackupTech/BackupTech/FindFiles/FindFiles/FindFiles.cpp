@@ -14,12 +14,14 @@
 //              [如何通过使用 Visual C++ 以递归方式搜索文件夹](http://support.microsoft.com/kb/307009)
 //              [Listing the Files in a Directory](http://msdn.microsoft.com/en-us/library/windows/desktop/aa365200%28v=vs.85%29.aspx)
 //              [c++实现对文件目录树形打印](http://blog.csdn.net/qiuchengw/article/details/2985958)
+//              [CFileFind Class](http://msdn.microsoft.com/en-us/library/f33e1618.aspx)
 
 #include "stdafx.h"
 
 void DirectorySearch(const TCHAR *dir)
 {
     WIN32_FIND_DATA FindFileData;
+    CFileFind FileFind;
 
     // TCHAR windows, when you define UNICODE, it will be wide char
     // or it will be ANSI
