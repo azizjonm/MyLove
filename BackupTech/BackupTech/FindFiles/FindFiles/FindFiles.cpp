@@ -9,12 +9,75 @@
 //              [C++遍历文件夹下的文件](http://www.oschina.net/code/snippet_119226_6095)
 //              [SearchFile](http://www.pudn.com/downloads208/sourcecode/windows/system/detail977523.html)
 //              [Windows下怎么按时间查找文件](http://www.myexception.cn/cpp/1510408.html)
+//              [how to search the computer for files and folders](http://stackoverflow.com/questions/3365182/how-to-search-the-computer-for-files-and-folders)
+//              [How can I get a list of files in a directory using C or C++?](http://stackoverflow.com/questions/612097/how-can-i-get-a-list-of-files-in-a-directory-using-c-or-c)
+//              [如何通过使用 Visual C++ 以递归方式搜索文件夹](http://support.microsoft.com/kb/307009)
+//              [Listing the Files in a Directory](http://msdn.microsoft.com/en-us/library/windows/desktop/aa365200%28v=vs.85%29.aspx)
+//              [c++实现对文件目录树形打印](http://blog.csdn.net/qiuchengw/article/details/2985958)
 
 #include "stdafx.h"
+
+void DirectorySearch(const TCHAR *dir)
+{
+    WIN32_FIND_DATA FindFileData;
+
+    // TCHAR windows, when you define UNICODE, it will be wide char
+    // or it will be ANSI
+    // wchar_t C language wide char
+    // so, when you need deal with wide char, just replace all string function strxxx into wcsxxx
+    // or just replace all char/wchar_t into TCHAR && all string function strxxx/wcsxxx into _tcsxxx, all the strings have _TEXT()
+    // then define ANSI/UNICODE whatever you want
+    TCHAR dirPathTemp[MAX_PATH];
+    TCHAR dirCodeTemp[MAX_PATH];
+    _tcscpy_s(dirPathTemp, _tcslen(dir) + 1, dir);
+    _tcscpy_s(dirCodeTemp, _tcslen(dir) + 1, dir);
+
+    const TCHAR *pChar = _tcsrchr(dir, _TEXT('\\'));
+    if(pChar != NULL && _tcslen(pChar) == 1){
+        _tcscat_s(dirCodeTemp, _TEXT("*"));
+    } else {
+        _tcscat_s(dirCodeTemp, _TEXT("\\*"));
+        _tcscat_s(dirPathTemp, _TEXT("\\"));
+    }
+
+    HANDLE hSearch = FindFirstFile(dirCodeTemp, &FindFileData);
+    if(hSearch == INVALID_HANDLE_VALUE){
+        printf("FindFirstFile failed (%d)\n", GetLastError());
+        return;
+    }
+
+    if((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0){
+        std::wcout << _TEXT("FileName: ") << FindFileData.cFileName << _TEXT(" \n\tSize: ")
+            << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
+    } else {
+        std::wcout << _TEXT("DirectoryName: ") << FindFileData.cFileName << std::endl;
+    }
+
+    while(FindNextFile(hSearch, &FindFileData)){
+        if(!_tcscmp(FindFileData.cFileName, _TEXT(".")) || !_tcscmp(FindFileData.cFileName, _TEXT(".."))){
+            continue;
+        }
+
+        TCHAR szDirFileTemp[MAX_PATH];
+        _tcscpy_s(szDirFileTemp, _tcslen(szDirFileTemp) + 1, dirPathTemp);
+        _tcscat_s(szDirFileTemp, FindFileData.cFileName);
+        if((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0){
+            std::wcout << _TEXT("FileName: ") << FindFileData.cFileName << _TEXT(" \n\tSize: ")
+                << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
+        } else {
+            std::wcout << _TEXT("DirectoryName: ") << FindFileData.cFileName << std::endl;
+            _tcscat_s(szDirFileTemp, _TEXT("\\"));
+            DirectorySearch(szDirFileTemp);
+        }
+    }
+    FindClose(hSearch);
+    hSearch = INVALID_HANDLE_VALUE;
+}
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	return 0;
+    DirectorySearch(_TEXT("J:\\Entertainment\\Music"));
+    return 0;
 }
 
