@@ -16,13 +16,14 @@
 //              [c++实现对文件目录树形打印](http://blog.csdn.net/qiuchengw/article/details/2985958)
 //              [CFileFind Class](http://msdn.microsoft.com/en-us/library/f33e1618.aspx)
 //              [关于 wcout 输出中文的问题](http://blog.csdn.net/querw/article/details/6690954)
+//              [strcpy_s, wcscpy_s, _mbscpy_s](http://msdn.microsoft.com/en-us/library/td1esda9.aspx)
 
 #include "stdafx.h"
 
 void DirectorySearch(const TCHAR *dir)
 {
     WIN32_FIND_DATA FindFileData;
-    CFileFind FileFind;
+    //CFileFind FileFind;
 
     // TCHAR windows, when you define UNICODE, it will be wide char
     // or it will be ANSI
@@ -72,8 +73,8 @@ void DirectorySearch(const TCHAR *dir)
                 << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
         } else {
             std::wcout << _TEXT("DirectoryName: ") << FindFileData.cFileName << std::endl;
-            //_tcscat_s(szDirFileTemp, _TEXT("\\"));
-            //DirectorySearch(szDirFileTemp);
+            _tcscat_s(szDirFileTemp, _TEXT("\\"));
+            DirectorySearch(szDirFileTemp);
         }
     }
     FindClose(hSearch);
@@ -84,7 +85,8 @@ void DirectorySearch(const TCHAR *dir)
 int _tmain(int argc, _TCHAR* argv[])
 {
     std::locale::global(std::locale(""));
-    DirectorySearch(_TEXT("J:\\Entertainment\\Music"));
+    DirectorySearch(_TEXT("J:\\Entertainment\\Music\\"));
+    system("pause");
     return 0;
 }
 
