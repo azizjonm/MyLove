@@ -15,6 +15,7 @@
 //              [Listing the Files in a Directory](http://msdn.microsoft.com/en-us/library/windows/desktop/aa365200%28v=vs.85%29.aspx)
 //              [c++实现对文件目录树形打印](http://blog.csdn.net/qiuchengw/article/details/2985958)
 //              [CFileFind Class](http://msdn.microsoft.com/en-us/library/f33e1618.aspx)
+//              [关于 wcout 输出中文的问题](http://blog.csdn.net/querw/article/details/6690954)
 
 #include "stdafx.h"
 
@@ -29,20 +30,22 @@ void DirectorySearch(const TCHAR *dir)
     // so, when you need deal with wide char, just replace all string function strxxx into wcsxxx
     // or just replace all char/wchar_t into TCHAR && all string function strxxx/wcsxxx into _tcsxxx, all the strings have _TEXT()
     // then define ANSI/UNICODE whatever you want
-    TCHAR dirPathTemp[MAX_PATH];
-    TCHAR dirCodeTemp[MAX_PATH];
-    _tcscpy_s(dirPathTemp, _tcslen(dir) + 1, dir);
-    _tcscpy_s(dirCodeTemp, _tcslen(dir) + 1, dir);
+    TCHAR szDirPathTemp[MAX_PATH];
+    TCHAR szCodeTemp[MAX_PATH];
+    //_tcscpy_s(szDirPathTemp, _tcslen(dir)*sizeof(TCHAR), dir);
+    //_tcscpy_s(szCodeTemp, _tcslen(dir)*sizeof(TCHAR), dir);
+    _tcscpy_s(szDirPathTemp, dir);
+    _tcscpy_s(szCodeTemp, dir);
 
     const TCHAR *pChar = _tcsrchr(dir, _TEXT('\\'));
     if(pChar != NULL && _tcslen(pChar) == 1){
-        _tcscat_s(dirCodeTemp, _TEXT("*"));
+        _tcscat_s(szCodeTemp, _TEXT("*"));
     } else {
-        _tcscat_s(dirCodeTemp, _TEXT("\\*"));
-        _tcscat_s(dirPathTemp, _TEXT("\\"));
+        _tcscat_s(szCodeTemp, _TEXT("\\*"));
+        _tcscat_s(szDirPathTemp, _TEXT("\\"));
     }
 
-    HANDLE hSearch = FindFirstFile(dirCodeTemp, &FindFileData);
+    HANDLE hSearch = FindFirstFile(szCodeTemp, &FindFileData);
     if(hSearch == INVALID_HANDLE_VALUE){
         printf("FindFirstFile failed (%d)\n", GetLastError());
         return;
@@ -61,15 +64,16 @@ void DirectorySearch(const TCHAR *dir)
         }
 
         TCHAR szDirFileTemp[MAX_PATH];
-        _tcscpy_s(szDirFileTemp, _tcslen(szDirFileTemp) + 1, dirPathTemp);
+        //_tcscpy_s(szDirFileTemp, _tcslen(szDirFileTemp)*sizeof(TCHAR), szDirPathTemp);
+        _tcscpy_s(szDirFileTemp, szDirPathTemp);
         _tcscat_s(szDirFileTemp, FindFileData.cFileName);
         if((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0){
             std::wcout << _TEXT("FileName: ") << FindFileData.cFileName << _TEXT(" \n\tSize: ")
                 << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
         } else {
             std::wcout << _TEXT("DirectoryName: ") << FindFileData.cFileName << std::endl;
-            _tcscat_s(szDirFileTemp, _TEXT("\\"));
-            DirectorySearch(szDirFileTemp);
+            //_tcscat_s(szDirFileTemp, _TEXT("\\"));
+            //DirectorySearch(szDirFileTemp);
         }
     }
     FindClose(hSearch);
@@ -79,6 +83,7 @@ void DirectorySearch(const TCHAR *dir)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+    std::locale::global(std::locale(""));
     DirectorySearch(_TEXT("J:\\Entertainment\\Music"));
     return 0;
 }
