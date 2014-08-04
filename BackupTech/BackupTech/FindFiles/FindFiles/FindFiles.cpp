@@ -24,6 +24,7 @@ const TCHAR *V_line = _TEXT("|    ");
 const TCHAR *B_line = _TEXT("|----");
 
 // when filename/extension parameter you don't use, make sure they are equal to NULL
+// if you want list the file/directory tree, keep the filename & extension parameters are equal to NULL
 void DirectorySearch(const TCHAR *dir, const TCHAR *filename, const TCHAR *extension, int iTabs)
 {
     WIN32_FIND_DATA FindFileData;
