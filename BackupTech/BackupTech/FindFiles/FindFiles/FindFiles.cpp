@@ -20,7 +20,11 @@
 
 #include "stdafx.h"
 
-void DirectorySearch(const TCHAR *dir)
+const TCHAR *V_line = _TEXT("|    ");
+const TCHAR *B_line = _TEXT("|----");
+
+// when filename/extension parameter you don't use, make sure they are equal to NULL
+void DirectorySearch(const TCHAR *dir, const TCHAR *filename, const TCHAR *extension)
 {
     WIN32_FIND_DATA FindFileData;
     //CFileFind FileFind;
@@ -41,9 +45,13 @@ void DirectorySearch(const TCHAR *dir)
     const TCHAR *pChar = _tcsrchr(dir, _TEXT('\\'));
     if(pChar != NULL && _tcslen(pChar) == 1){
         _tcscat_s(szCodeTemp, _TEXT("*"));
+        //_tcscat_s(szCodeTemp, code);
     } else {
         _tcscat_s(szCodeTemp, _TEXT("\\*"));
+        //_tcscat_s(szCodeTemp, _TEXT("\\"));
+        //_tcscat_s(szCodeTemp, code);
         _tcscat_s(szDirPathTemp, _TEXT("\\"));
+        //_tcscat_s(szDirPathTemp, _TEXT("\\"));
     }
 
     HANDLE hSearch = FindFirstFile(szCodeTemp, &FindFileData);
@@ -52,11 +60,17 @@ void DirectorySearch(const TCHAR *dir)
         return;
     }
 
+    /*
     if((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0){
         std::wcout << _TEXT("FileName: ") << FindFileData.cFileName << _TEXT(" \n\tSize: ")
             << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
     } else {
         std::wcout << _TEXT("DirectoryName: ") << FindFileData.cFileName << std::endl;
+    }
+    */
+    if(!(FindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)){
+        std::wcout << _TEXT("FileName: ") << FindFileData.cFileName << _TEXT(" \n\tSize: ")
+            << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
     }
 
     while(FindNextFile(hSearch, &FindFileData)){
@@ -64,17 +78,40 @@ void DirectorySearch(const TCHAR *dir)
             continue;
         }
 
-        TCHAR szDirFileTemp[MAX_PATH];
-        //_tcscpy_s(szDirFileTemp, _tcslen(szDirFileTemp)*sizeof(TCHAR), szDirPathTemp);
-        _tcscpy_s(szDirFileTemp, szDirPathTemp);
-        _tcscat_s(szDirFileTemp, FindFileData.cFileName);
+        /*
         if((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0){
             std::wcout << _TEXT("FileName: ") << FindFileData.cFileName << _TEXT(" \n\tSize: ")
                 << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
         } else {
             std::wcout << _TEXT("DirectoryName: ") << FindFileData.cFileName << std::endl;
             _tcscat_s(szDirFileTemp, _TEXT("\\"));
-            DirectorySearch(szDirFileTemp);
+            DirectorySearch(szDirFileTemp, code);
+        }
+        */
+        if(FindFileData.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY){
+            TCHAR szDirFileTemp[MAX_PATH];
+            //_tcscpy_s(szDirFileTemp, _tcslen(szDirFileTemp)*sizeof(TCHAR), szDirPathTemp);
+            _tcscpy_s(szDirFileTemp, szDirPathTemp);
+            _tcscat_s(szDirFileTemp, FindFileData.cFileName);
+            //std::wcout << _TEXT("DirectoryName: ") << FindFileData.cFileName << std::endl;
+            _tcscat_s(szDirFileTemp, _TEXT("\\"));
+            DirectorySearch(szDirFileTemp, filename, extension);
+        } else {
+            if(filename != NULL){
+                const TCHAR *match_filename = _tcsstr((const TCHAR*)(FindFileData.cFileName), filename);
+                if(match_filename != NULL){
+                    std::wcout << _TEXT("Match FileName: ") << szDirPathTemp << FindFileData.cFileName << _TEXT(" \n\tSize: ")
+                        << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
+                }
+            } else if(extension != NULL){
+                const TCHAR *match_extension = _tcsstr((const TCHAR*)(FindFileData.cFileName), extension);
+                if(match_extension != NULL && _tcslen(match_extension) == _tcslen(extension)){
+                    std::wcout << _TEXT("Match Extension: ") << szDirPathTemp << FindFileData.cFileName << _TEXT(" \n\tSize: ")
+                        << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
+                }
+            }
+            // std::wcout << _TEXT("FileName: ") << FindFileData.cFileName << _TEXT(" \n\tSize: ")
+            //     << FindFileData.nFileSizeHigh * ((DWORDLONG)MAXDWORD + 1) + FindFileData.nFileSizeLow << std::endl;
         }
     }
     FindClose(hSearch);
@@ -85,7 +122,7 @@ void DirectorySearch(const TCHAR *dir)
 int _tmain(int argc, _TCHAR* argv[])
 {
     std::locale::global(std::locale(""));
-    DirectorySearch(_TEXT("J:\\Entertainment\\Music\\"));
+    DirectorySearch(_TEXT("J:\\Entertainment\\Music\\"), NULL, _TEXT(".lrc"));
     system("pause");
     return 0;
 }
